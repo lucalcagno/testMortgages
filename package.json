@@ -1,0 +1,23 @@
+{
+  "name": "home-chain",
+  "version": "0.0.7",
+  "description": "home chain",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "author": "Z",
+  "email": "Z",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "latest",
+    "composer-admin": "latest",
+    "composer-client": "latest",
+    "composer-common": "latest",
+    "composer-connector-embedded": "latest",
+    "eslint": "latest",
+    "istanbul": "latest",
+    "lodash": "^4.17.5",
+    "mkdirp": "latest",
+    "mocha": "latest"
+  }
+}

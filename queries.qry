@@ -1,0 +1,9 @@
+/** Sample queries for Commodity Trading business network
+*/
+
+query selectForSaleProperties {
+  description: "Select all properties which are for sale"
+  statement:
+      SELECT com.ibm.homechain.Property
+        WHERE (status == 'FOR_SALE')
+}

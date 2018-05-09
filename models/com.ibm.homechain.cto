@@ -1,0 +1,185 @@
+/**
+ * Model definitions for HomeChain
+ */
+
+namespace com.ibm.homechain
+
+enum SaleStatus {
+  o NA
+  o FOR_SALE
+  o SOLD_STC
+}
+
+enum MortgageStatus {
+  o PENDING
+  o IN_PRINCIPLE
+  o APPROVED
+  o REJECTED
+}
+
+concept Mortgage {
+  o Integer amount optional
+  o MortgageStatus status
+  --> Bank bank
+}
+
+concept Offer {
+  o String id
+  o Integer amount
+  --> Person buyer
+  o Boolean accepted
+}
+
+abstract participant User identified by email {
+  o String email
+}
+
+participant Person identified by ID extends User {
+  o String ID                 // Some sort of unique ID - type TBD
+  o String firstName
+  o String lastName
+  o Mortgage mortgage optional // limit to one mortgage atm; this can be changed to an array for more
+}
+
+participant EstateAgent identified by companyNumber extends User {
+  o String businessName
+  o String companyNumber
+}
+
+participant Bank extends User {
+  o String name
+}
+
+participant Surveyor extends User {
+  o String name
+}
+
+participant Insurer extends User {
+  o String name
+}
+
+participant LandRegistry extends User {
+}
+
+participant Regulator extends User {
+}
+
+asset Property identified by propertyId {
+  o String propertyId
+  o String address1
+  o String address2
+  o String county
+  o String postcode regex=/([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2})/
+  o Integer bedrooms
+  o SaleStatus status
+  o Offer[] offers optional
+  o Boolean surveyPerformed
+  o Boolean insurance
+  --> Person owner
+}
+
+transaction RegisterPropertyForSale {
+  --> EstateAgent seller
+  --> Property property
+}
+
+transaction PropertySale {
+  o DateTime date
+  --> Property property
+}
+
+transaction ApplyForMortgage {
+  --> Person applicant
+  --> Bank bank
+}
+
+transaction ApproveMortgageInPrinciple {
+  o Integer amount
+  --> Person applicant
+}
+
+transaction RejectMortgage {
+  --> Person applicant
+}
+
+transaction MakeOfferOnProperty {
+  o Integer amount
+  --> Person buyer
+  --> Property property
+}
+
+transaction AcceptOfferOnProperty {
+  o String offerId
+  --> Property property
+}
+
+transaction PerformSurvey {
+  --> Property property
+}
+
+transaction ProvideInsurance {
+  --> Property property
+}
+
+transaction ApproveMortgage {
+  --> Property property
+}
+
+event ForSaleEvent {
+  --> EstateAgent seller
+  --> Property property
+}
+
+event SaleEvent {
+  o Integer price
+  --> Person  buyer
+  --> Property property
+}
+
+event MortgageApplication {
+  --> Person applicant
+  --> Bank bank
+}
+
+event MortgageApprovalInPrinciple {
+  o Integer amount
+  --> Person applicant
+  --> Bank bank
+}
+
+event MortgageRejection {
+  --> Person applicant
+  --> Bank bank
+}
+
+event OfferOnProperty {
+  o String id
+  o Integer amount
+  --> Person buyer
+  --> Property property
+}
+
+event OfferOnPropertyAccepted {
+  o String offerId
+  o Integer amount
+  --> Person buyer
+  --> Property property
+}
+
+event SurveyPerformed {
+  --> Property property
+}
+
+event InsuranceProvided {
+  --> Property property
+}
+
+event MortgageApproved {
+  o Integer amount
+  --> Person buyer
+  --> Property property
+}
+
+// ----- ONLY FOR DEMO PURPOSES ------
+transaction SeedData  {
+}
